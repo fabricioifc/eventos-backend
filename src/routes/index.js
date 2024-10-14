@@ -6,7 +6,7 @@ const participantRoutes = require('./participantRoutes');
 
 const router = express.Router();
 
-router.use('/users', userRoutes);
+router.use('/auth', userRoutes);
 router.use('/events', eventRoutes);
 router.use('/participants', participantRoutes);
 

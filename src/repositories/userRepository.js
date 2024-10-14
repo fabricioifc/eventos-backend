@@ -10,7 +10,17 @@ class UserRepository {
         return User.create(user);
     }
 
-    // Outros métodos para busca, atualização e exclusão
+    async findById(id) {
+        return User.findByPk(id, { attributes: { exclude: ['password'] } });
+    }
+
+    async findAll() {
+        return User.findAll({ attributes: { exclude: ['password'] } });
+    }
+
+    async update(id, user) {
+        return User.update(user, { where: { id } });
+    }
 }
 
 module.exports = new UserRepository();
