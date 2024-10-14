@@ -36,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Participant',
     tableName: 'participants',
     timestamps: false,
+    indexes: [{
+      unique: true,
+      fields: ['userId', 'eventId']
+    }]
   });
   return Participant;
 };

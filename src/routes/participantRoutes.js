@@ -4,7 +4,9 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/', authMiddleware, participantController.registerParticipant);
+router.post('/', authMiddleware, participantController.createParticipant);
+router.post('/:id/register', authMiddleware, participantController.registerParticipant);
+router.post('/:id/unregister', authMiddleware, participantController.unregisterParticipant);
 router.get('/event/:eventId', participantController.getParticipantsByEvent);
 router.get('/', participantController.getAllParticipants);
 

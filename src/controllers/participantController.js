@@ -1,11 +1,29 @@
 const participantService = require('../services/participantService');
 
 class ParticipantController {
+
+    async createParticipant(req, res, next) {
+        try {
+            const participant = await participantService.createParticipant(req.body);
+            res.status(201).json(participant);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async registerParticipant(req, res, next) {
         try {
-            const { userId, eventId } = req.body;
-            const participant = await participantService.registerParticipant(userId, eventId);
-            res.status(201).json(participant);
+            const participant = await participantService.registerParticipant(req.user.id, req.params.id);
+            res.json(participant);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async unregisterParticipant(req, res, next) {
+        try {
+            const participant = await participantService.unregisterParticipant(req.user.id, req.params.id);
+            res.json(participant);
         } catch (error) {
             next(error);
         }

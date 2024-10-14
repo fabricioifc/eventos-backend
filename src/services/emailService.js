@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const enviarEmail = ({ to, subject, text: html }) => {
+const enviarEmail = ({ to, subject, html }) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to,

@@ -5,11 +5,11 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     static associate(models) {
-      // Event.belongsToMany(models.User, {
-      //   through: models.Participant,
-      //   foreignKey: 'event_id',
-      //   as: 'participants'
-      // });
+      Event.belongsToMany(models.User, {
+        through: models.Participant,
+        foreignKey: 'eventId',
+        as: 'participants'
+      });
     }
   }
   Event.init({

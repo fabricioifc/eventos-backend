@@ -6,15 +6,15 @@ module.exports = {
     await queryInterface.bulkInsert('Users', [
       {
         name: 'Admin',
-        email: 'admin@admin.com',
-        password: '$2b$10$3JjJwQ2j2g8B9Gvz3lNQXeW4vJyZJZt8Zp9x1tC0ZfL3gk3G8Kz4u',
+        email: 'fabricio.bizotto@ifc.edu.br',
+        password: '$2a$10$HoKw5eQKvf8xcpJ.PVa4M.KAFSklk2Veh.fKJ5bwGu0ejUrIbDcFq',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'User',
-        email: 'user@user.com',
-        password: '$2b$10$3JjJwQ2j2g8B9Gvz3lNQXeW4vJyZJZt8Zp9x1tC0ZfL3gk3G8Kz4u',
+        email: 'fabricio.bizotto@gmail.com',
+        password: '$2a$10$HoKw5eQKvf8xcpJ.PVa4M.KAFSklk2Veh.fKJ5bwGu0ejUrIbDcFq',
         createdAt: new Date(),
         updatedAt: new Date()
       }

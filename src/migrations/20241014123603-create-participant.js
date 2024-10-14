@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false, // Pode ser ajustado conforme a lógica do seu aplicativo
         references: {
-          model: 'Users', // Nome da tabela referenciada
+          model: 'users', // Nome da tabela referenciada
           key: 'id', // Chave primária na tabela referenciada
         },
         onUpdate: 'CASCADE', // Atualiza se o User for atualizado
@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false, // Pode ser ajustado conforme a lógica do seu aplicativo
         references: {
-          model: 'Events', // Nome da tabela referenciada
+          model: 'events', // Nome da tabela referenciada
           key: 'id', // Chave primária na tabela referenciada
         },
         onUpdate: 'CASCADE', // Atualiza se o Event for atualizado
