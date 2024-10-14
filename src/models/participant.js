@@ -6,16 +6,36 @@ module.exports = (sequelize, DataTypes) => {
   class Participant extends Model {
 
     static associate(models) {
-      Participant.belongsTo(models.User, { foreignKey: 'user_id' });
-      Participant.belongsTo(models.Event, { foreignKey: 'event_id' });
+      Participant.belongsTo(models.User, {
+        foreignKey: 'userId',
+        as: 'user'
+      });
+      Participant.belongsTo(models.Event, {
+        foreignKey: 'eventId',
+        as: 'event'
+      });
     }
   }
   Participant.init({
-    user_id: DataTypes.INTEGER,
-    event_id: DataTypes.INTEGER,
+    userId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'User',
+        key: 'id'
+      }
+    },
+    eventId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Event',
+        key: 'id'
+      }
+    }
   }, {
     sequelize,
     modelName: 'Participant',
+    tableName: 'participants',
+    timestamps: false,
   });
   return Participant;
 };

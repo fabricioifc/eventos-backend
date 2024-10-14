@@ -19,6 +19,15 @@ class ParticipantController {
             next(error);
         }
     }
+
+    async getAllParticipants(req, res, next) {
+        try {
+            const participants = await participantService.getAllParticipants();
+            res.json(participants);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new ParticipantController();

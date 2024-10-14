@@ -7,27 +7,31 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
-      name: {
-        type: Sequelize.STRING
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false, // Pode ser ajustado conforme a lógica do seu aplicativo
+        references: {
+          model: 'Users', // Nome da tabela referenciada
+          key: 'id', // Chave primária na tabela referenciada
+        },
+        onUpdate: 'CASCADE', // Atualiza se o User for atualizado
+        onDelete: 'CASCADE', // Remove os Participantes se o User for removido
       },
-      email: {
-        type: Sequelize.STRING
+      eventId: {
+        type: Sequelize.INTEGER,
+        allowNull: false, // Pode ser ajustado conforme a lógica do seu aplicativo
+        references: {
+          model: 'Events', // Nome da tabela referenciada
+          key: 'id', // Chave primária na tabela referenciada
+        },
+        onUpdate: 'CASCADE', // Atualiza se o Event for atualizado
+        onDelete: 'CASCADE', // Remove os Participantes se o Event for removido
       },
-      event_id: {
-        type: Sequelize.INTEGER
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
     });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Participants');
   }

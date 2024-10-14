@@ -5,12 +5,11 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     static associate(models) {
-      // define association here
-      Event.belongsToMany(models.User, {
-        through: models.Participant,
-        foreignKey: 'event_id',
-        as: 'participants'
-      });
+      // Event.belongsToMany(models.User, {
+      //   through: models.Participant,
+      //   foreignKey: 'event_id',
+      //   as: 'participants'
+      // });
     }
   }
   Event.init({
@@ -20,11 +19,11 @@ module.exports = (sequelize, DataTypes) => {
     endTime: DataTypes.TIME,
     capacity: DataTypes.NUMBER,
     status: DataTypes.BOOLEAN,
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Event',
+    tableName: 'events',
+    timestamps: true,
   });
   return Event;
 };

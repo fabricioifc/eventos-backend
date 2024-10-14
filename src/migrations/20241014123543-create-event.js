@@ -15,10 +15,10 @@ module.exports = {
       date: {
         type: Sequelize.DATE
       },
-      start_time: {
+      startTime: {
         type: Sequelize.TIME
       },
-      end_time: {
+      endTime: {
         type: Sequelize.TIME
       },
       capacity: {
