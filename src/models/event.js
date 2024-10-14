@@ -1,18 +1,28 @@
-// models/event.js
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    const Event = sequelize.define('Event', {
-        title: DataTypes.STRING,
-        description: DataTypes.STRING,
-        date: DataTypes.DATE,
-    });
-
-    Event.associate = function (models) {
-        Event.belongsToMany(models.User, {
-            through: 'Participant',
-            as: 'participants',
-            foreignKey: 'eventId',
-        });
-    };
-
-    return Event;
+  class Event extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  Event.init({
+    title: DataTypes.STRING,
+    date: DataTypes.DATE,
+    start_time: DataTypes.TIME,
+    end_time: DataTypes.TIME,
+    capacity: DataTypes.NUMBER,
+    status: DataTypes.BOOLEAN
+  }, {
+    sequelize,
+    modelName: 'Event',
+  });
+  return Event;
 };
