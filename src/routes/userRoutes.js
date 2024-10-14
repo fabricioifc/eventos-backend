@@ -18,5 +18,4 @@ router.get('/reset-password/:token', userController.resetPasswordPage);
 router.post('/reset-password', userController.resetPassword);
 router.post('/update-profile', authMiddleware, userController.updateProfile);
 
-
 module.exports = router;

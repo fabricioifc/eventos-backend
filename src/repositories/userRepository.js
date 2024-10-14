@@ -1,4 +1,3 @@
-// repositories/userRepository.js
 const { User } = require('../models');
 
 class UserRepository {
