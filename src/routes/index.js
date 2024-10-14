@@ -1,8 +1,8 @@
 // routes/index.js
 const express = require('express');
-const userRoutes = require('./user');
-const eventRoutes = require('./event');
-const participantRoutes = require('./participant');
+const userRoutes = require('./userRoutes');
+const eventRoutes = require('./eventRoutes');
+const participantRoutes = require('./participantRoutes');
 
 const router = express.Router();
 
