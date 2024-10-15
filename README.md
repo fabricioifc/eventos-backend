@@ -1645,7 +1645,7 @@ Conteúdo do arquivo `src/routes/eventRoutes.js`:
 ```js
 const express = require('express');
 const eventController = require('../controllers/eventController');
-const authMiddleware = require('../middleware/authMiddleware');
+const authenticate = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -1664,7 +1664,7 @@ const eventValidation = {
     }
 }
 
-router.post('/', authMiddleware, validate(eventValidation.createEvent), eventController.createEvent);
+router.post('/', authenticate, validate(eventValidation.createEvent), eventController.createEvent);
 router.get('/', eventController.getAllEvents);
 router.get('/:id', eventController.getEventById);
 
@@ -1683,13 +1683,13 @@ Conteúdo do arquivo `src/routes/participantRoutes.js`:
 ```js
 const express = require('express');
 const participantController = require('../controllers/participantController');
-const authMiddleware = require('../middleware/authMiddleware');
+const authenticate = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post('/', authMiddleware, participantController.createParticipant);
-router.post('/:id/register', authMiddleware, participantController.registerParticipant);
-router.post('/:id/unregister', authMiddleware, participantController.unregisterParticipant);
+router.post('/', authenticate, participantController.createParticipant);
+router.post('/:id/register', authenticate, participantController.registerParticipant);
+router.post('/:id/unregister', authenticate, participantController.unregisterParticipant);
 router.get('/event/:eventId', participantController.getParticipantsByEvent);
 router.get('/', participantController.getAllParticipants);
 
