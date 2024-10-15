@@ -4,8 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "pm2 start server.js --name minha-api --env production",
+    "stop": "pm2 stop minha-api",
+    "dev": "nodemon server.js",
+    "migrate": "sequelize db:migrate"
   },
   "keywords": [],
   "author": "",
