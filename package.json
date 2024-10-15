@@ -4,10 +4,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start server.js --name minha-api --env production",
+    "start": "node server.js",
     "stop": "pm2 stop minha-api",
+    "start:prod": "pm2 start server.js --name minha-api --env production",
+    "stop:prod": "pm2 stop minha-api",
     "dev": "nodemon server.js",
-    "migrate": "sequelize db:migrate"
+    "migrate": "npx sequelize-cli db:migrate"
   },
   "keywords": [],
   "author": "",
