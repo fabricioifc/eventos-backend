@@ -1,16 +1,28 @@
 const { Event } = require('../models');
 
 class EventRepository {
-    async create(eventData) {
-        return Event.create(eventData);
+    async create(event) {
+        return await Event.create(event);
     }
 
     async findAll() {
-        return Event.findAll();
+        return await Event.findAll();
     }
 
-    async findById(eventId) {
-        return Event.findByPk(eventId);
+    async findById(id) {
+        return await Event.findByPk(id);
+    }
+
+    async update(id, event) {
+        return await Event.update(event, {
+            where: { id },
+        });
+    }
+
+    async delete(id) {
+        return await Event.destroy({
+            where: { id },
+        });
     }
 }
 

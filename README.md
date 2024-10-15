@@ -110,10 +110,6 @@ Crie as tabelas, também conhecidas como modelos, com os comandos:
 ```bash
 # Criar o modelo User
 npx sequelize-cli model:generate --name User --attributes name:string,email:string,password:string
-# Criar o modelo Event
-npx sequelize-cli model:generate --name Event --attributes title:string,date:date,startTime:time,endTime:time,capacity:number,status:boolean
-# Criar o modelo Participant
-npx sequelize-cli model:generate --name Participant --attributes userId:integer,eventId:integer
 # Criar o modelo Todo
 npx sequelize-cli model:generate --name Todo --attributes title:string,description:string,status:boolean
 ```
@@ -156,90 +152,6 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
-  }
-};
-```
-
-- `src/migrations/xxxx-create-event.js`:
-```js
-'use strict';
-/** @type {import('sequelize-cli').Migration} */
-module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Participants', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false, // Pode ser ajustado conforme a lógica do seu aplicativo
-        references: {
-          model: 'users', // Nome da tabela referenciada
-          key: 'id', // Chave primária na tabela referenciada
-        },
-        onUpdate: 'CASCADE', // Atualiza se o User for atualizado
-        onDelete: 'CASCADE', // Remove os Participantes se o User for removido
-      },
-      eventId: {
-        type: Sequelize.INTEGER,
-        allowNull: false, // Pode ser ajustado conforme a lógica do seu aplicativo
-        references: {
-          model: 'events', // Nome da tabela referenciada
-          key: 'id', // Chave primária na tabela referenciada
-        },
-        onUpdate: 'CASCADE', // Atualiza se o Event for atualizado
-        onDelete: 'CASCADE', // Remove os Participantes se o Event for removido
-      },
-    });
-  },
-
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Participants');
-  }
-};
-```
-
-- `src/migrations/xxxx-create-participant.js`:
-```js
-'use strict';
-/** @type {import('sequelize-cli').Migration} */
-module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Participants', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'users', // Nome da tabela referenciada
-          key: 'id', // Chave primária na tabela referenciada
-        },
-        onUpdate: 'CASCADE', // Atualiza se o User for atualizado
-        onDelete: 'CASCADE', // Remove os Participantes se o User for removido
-      },
-      eventId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'events', // Nome da tabela referenciada
-          key: 'id', // Chave primária na tabela referenciada
-        },
-        onUpdate: 'CASCADE', // Atualiza se o Event for atualizado
-        onDelete: 'CASCADE', // Remove os Participantes se o Event for removido
-      },
-    });
-  },
-
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Participants');
   }
 };
 ```
@@ -775,6 +687,10 @@ const errorHandler = (err, req, res, next) => {
         return res.status(err.statusCode).json({ message: err.message });
     }
 
+    if (err instanceof Error) {
+        return res.status(400).json({ message: err.message });
+    }
+
     return res.status(500).json({ message: 'Internal server error' });
 }
 
@@ -1132,6 +1048,8 @@ module.exports = {
 };
 ```
 
+> **Observação:** O pacote `express-validation` foi descontinuado. Para substituir, você pode usar o pacote `joi`.
+
 ## Adicionando um Seed de Usuários
 
 Crie o arquivo de seed `src/seeders/xxxx-user.js`.
@@ -1193,7 +1111,7 @@ curl -X POST http://localhost:5000/api/auth/login -H 'Content-Type: application/
 
 ```bash
 # Listar todos os usuários com Bearer Token
-curl -X GET http://localhost:5000/api/auth/users -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ0ZXN0ZUBnbWFpbC5jb20iLCJpYXQiOjE3Mjg5NDY5MzUsImV4cCI6MTcyODk1MDUzNX0.RibW9Y5seD48R_mQi8BTUpEktGeuF1HTmNB_2kIXV8g' | jq .
+curl -X GET http://localhost:5000/api/auth/users -H 'authorization: Bearer fyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ0ZXN0ZUBnbWFpbC5jb20iLCJpYXQiOjE3Mjg5NDY5MzUsImV4cCI6MTcyODk1MDUzNX0.RibW9Y5seD48R_mQi8BTUpEktGeuF1HTmNB_2kIXV8g' | jq .
 ```
 
 ## Recapitulando
@@ -1210,3 +1128,589 @@ Neste tutorial, você aprendeu a criar uma API RESTful com Node.js, Express e Se
 - Adicionar erros personalizados.
 - Adicionar seeders para popular o banco de dados.
 - Testar a aplicação com CURL.
+
+## Adicionando mais Recursos
+
+Concluindo o primeiro CRUD, podemos agora criar a nossa aplicação de eventos. Para isso, vamos adicionar mais recursos à nossa aplicação:
+
+- Criar um modelo `Event` com os campos `title`, `date`, `startTime`, `endTime`, `capacity` e `status`.
+- Criar um modelo `Participant` com os campos `userId` e `eventId`.
+
+Para isso, execute os seguintes comandos:
+
+```bash
+# Criar o modelo Event
+npx sequelize-cli model:generate --name Event --attributes title:string,date:date,startTime:time,endTime:time,capacity:number,status:boolean
+# Criar o modelo Participant
+npx sequelize-cli model:generate --name Participant --attributes userId:integer,eventId:integer
+```
+
+Faça algumas mudanças nos arquivos gerados:
+
+
+- `src/migrations/xxxx-create-event.js`:
+```js
+'use strict';
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('Events', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      title: {
+        type: Sequelize.STRING
+      },
+      date: {
+        type: Sequelize.DATE
+      },
+      startTime: {
+        type: Sequelize.TIME
+      },
+      endTime: {
+        type: Sequelize.TIME
+      },
+      capacity: {
+        type: Sequelize.NUMBER
+      },
+      status: {
+        type: Sequelize.BOOLEAN
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('Events');
+  }
+};
+```
+
+- `src/migrations/xxxx-create-participant.js`:
+```js
+'use strict';
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('Participants', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users', // Nome da tabela referenciada
+          key: 'id', // Chave primária na tabela referenciada
+        },
+        onUpdate: 'CASCADE', // Atualiza se o User for atualizado
+        onDelete: 'CASCADE', // Remove os Participantes se o User for removido
+      },
+      eventId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'events', // Nome da tabela referenciada
+          key: 'id', // Chave primária na tabela referenciada
+        },
+        onUpdate: 'CASCADE', // Atualiza se o Event for atualizado
+        onDelete: 'CASCADE', // Remove os Participantes se o Event for removido
+      },
+    });
+  },
+
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('Participants');
+  }
+};
+```
+
+> Com isso, as tabelas `Events` e `Participants` serão criadas no banco de dados e também os arquivos `src/models/event.js` e `src/models/participant.js`.
+
+## Configurando os Repositórios
+
+Crie o arquivo `src/repositories/eventRepository.js`.
+
+```bash
+touch src/repositories/eventRepository.js
+```
+
+Conteúdo do arquivo `src/repositories/eventRepository.js`:
+
+```js
+const { Event } = require('../models');
+
+class EventRepository {
+    async create(event) {
+        return await Event.create(event);
+    }
+
+    async findAll() {
+        return await Event.findAll();
+    }
+
+    async findById(id) {
+        return await Event.findByPk(id);
+    }
+
+    async update(id, event) {
+        return await Event.update(event, {
+            where: { id },
+        });
+    }
+
+    async delete(id) {
+        return await Event.destroy({
+            where: { id },
+        });
+    }
+}
+
+module.exports = new EventRepository();
+```
+
+Crie o arquivo `src/repositories/participantRepository.js`.
+
+```bash
+touch src/repositories/participantRepository.js
+```
+
+Conteúdo do arquivo `src/repositories/participantRepository.js`:
+
+```js
+const { Participant } = require('../models');
+
+class ParticipantRepository {
+    async create(participantData) {
+        return Participant.create(participantData);
+    }
+
+    async findAll() {
+        return Participant.findAll();
+    }
+
+    async findByEventId(eventId) {
+        try {
+            // Eager loading
+            const participants = Participant.findAll({
+                where: {
+                    eventId,
+                },
+                include: {
+                    association: 'user',
+                    attributes: ['name', 'email'],
+                },
+            });
+
+
+            return participants;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async register(userId, eventId) {
+
+        try {
+            const participant = await Participant.create({
+                userId,
+                eventId,
+            });
+
+            return participant
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async findByUserIdAndEventId(userId, eventId) {
+        try {
+            const participant = await Participant.findOne({
+                where: {
+                    userId,
+                    eventId,
+                }
+            });
+
+            return participant;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async findRegisteredParticipant(userId, eventId) {
+        try {
+            const participant = await Participant.findOne({
+                where: {
+                    userId,
+                    eventId,
+                },
+                include: [
+                    {
+                        association: 'user',
+                        attributes: ['name', 'email'],
+                    },
+                    {
+                        association: 'event',
+                        attributes: ['title'],
+                    },
+                ]
+            });
+
+            return participant;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+}
+
+module.exports = new ParticipantRepository();
+```
+
+## Configurando os Serviços
+
+Crie o arquivo `src/services/eventService.js`.
+
+```bash
+touch src/services/eventService.js
+```
+
+Conteúdo do arquivo `src/services/eventService.js`:
+
+```js
+const eventRepository = require('../repositories/eventRepository');
+
+class EventService {
+    async createEvent(eventData) {
+        return eventRepository.create(eventData);
+    }
+
+    async getAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    async getEventById(eventId) {
+        return eventRepository.findById(eventId);
+    }
+}
+
+module.exports = new EventService();
+```
+
+Crie o arquivo `src/services/participantService.js`.
+
+```bash
+touch src/services/participantService.js
+```
+
+Conteúdo do arquivo `src/services/participantService.js`:
+
+```js
+const participantRepository = require('../repositories/participantRepository');
+const enviarEmail = require('./emailService');
+
+class ParticipantService {
+
+    async createParticipant(data) {
+        return participantRepository.create(data);
+    }
+
+    async registerParticipant(userId, eventId) {
+        if (!userId || !eventId) {
+            throw new Error('User ID and Event ID are required');
+        }
+
+        // Check if the user is already registered for the event
+        const participant = await participantRepository.findByUserIdAndEventId(userId, eventId);
+        if (participant) {
+            throw new Error('User is already registered for the event');
+        }
+
+        const registration = await participantRepository.register(userId, eventId);
+
+        if (registration) {
+            let registered = await participantRepository.findRegisteredParticipant(userId, eventId);
+            // Send email confirmation
+            await enviarEmail({
+                to: registered.user.email,
+                subject: 'Registration Confirmation',
+                html: `You have successfully registered for the event ${registered.event.title}`,
+            });
+        }
+        return registration, {
+            message: 'Registration successful. Check your email for confirmation',
+        };
+    }
+
+    async unregisterParticipant(userId, eventId) {
+        if (!userId || !eventId) {
+            throw new Error('User ID and Event ID are required');
+        }
+
+        // Check if the user is registered for the event
+        const participant = await participantRepository.findByUserIdAndEventId(userId, eventId);
+        if (!participant) {
+            throw new Error('User is not registered for the event');
+        }
+
+        return participant.destroy();
+    }
+
+    async getParticipantsByEvent(eventId) {
+        return participantRepository.findByEventId(eventId);
+    }
+
+    async getAllParticipants() {
+        return participantRepository.findAll();
+    }
+}
+
+module.exports = new ParticipantService();
+```
+
+## Configurando o Serviço de Envio de Email
+
+Crie o arquivo `src/services/emailService.js`.
+
+```bash
+touch src/services/emailService.js
+```
+
+Conteúdo do arquivo `src/services/emailService.js`:
+
+```js
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    pool: true,
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // use TLS
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+const enviarEmail = ({ to, subject, html }) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to,
+        subject,
+        html,
+    };
+
+    console.log('Sending email:', mailOptions);
+
+    return transporter.sendMail(mailOptions);
+};
+
+module.exports = enviarEmail;
+```
+
+> **Observação:** Para enviar e-mails, você precisa configurar um serviço de e-mail. Neste exemplo, usamos o Gmail. Para isso, você precisa habilitar a autenticação de dois fatores e gerar uma senha de aplicativo. Para mais informações, consulte a documentação do Gmail.
+
+## Configurando os Controladores
+
+Crie o arquivo `src/controllers/eventController.js`.
+
+```bash
+touch src/controllers/eventController.js
+```
+
+Conteúdo do arquivo `src/controllers/eventController.js`:
+
+```js
+const eventService = require('../services/eventService');
+
+class EventController {
+    async createEvent(req, res, next) {
+        try {
+            const event = await eventService.createEvent(req.body);
+            res.status(201).json(event);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getAllEvents(req, res, next) {
+        try {
+            const events = await eventService.getAllEvents();
+            res.json(events);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getEventById(req, res, next) {
+        try {
+            const event = await eventService.getEventById(req.params.id);
+            if (!event) {
+                return res.status(404).json({ message: 'Event not found' });
+            }
+            res.json(event);
+        } catch (error) {
+            next(error);
+        }
+    }
+}
+
+module.exports = new EventController();
+```
+
+Crie o arquivo `src/controllers/participantController.js`.
+
+```bash
+touch src/controllers/participantController.js
+```
+
+Conteúdo do arquivo `src/controllers/participantController.js`:
+
+```js
+const participantService = require('../services/participantService');
+
+class ParticipantController {
+
+    async createParticipant(req, res, next) {
+        try {
+            const participant = await participantService.createParticipant(req.body);
+            res.status(201).json(participant);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async registerParticipant(req, res, next) {
+        try {
+            const participant = await participantService.registerParticipant(req.user.id, req.params.id);
+            res.json(participant);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async unregisterParticipant(req, res, next) {
+        try {
+            const participant = await participantService.unregisterParticipant(req.user.id, req.params.id);
+            res.json(participant);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getParticipantsByEvent(req, res, next) {
+        try {
+            const participants = await participantService.getParticipantsByEvent(req.params.eventId);
+            res.json(participants);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getAllParticipants(req, res, next) {
+        try {
+            const participants = await participantService.getAllParticipants();
+            res.json(participants);
+        } catch (error) {
+            next(error);
+        }
+    }
+}
+
+module.exports = new ParticipantController();
+```
+
+## Configurando as Rotas
+
+Crie o arquivo `src/routes/eventRoutes.js`.
+
+```bash
+touch src/routes/eventRoutes.js
+```
+
+Conteúdo do arquivo `src/routes/eventRoutes.js`:
+
+```js
+const express = require('express');
+const eventController = require('../controllers/eventController');
+const authMiddleware = require('../middleware/authMiddleware');
+
+const router = express.Router();
+
+const { validate, Joi } = require('express-validation')
+
+const eventValidation = {
+    createEvent: {
+        body: Joi.object({
+            title: Joi.string().required(),
+            date: Joi.date().required(),
+            startTime: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required(),
+            endTime: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required(),
+            capacity: Joi.number().required(),
+            status: Joi.boolean().required()
+        })
+    }
+}
+
+router.post('/', authMiddleware, validate(eventValidation.createEvent), eventController.createEvent);
+router.get('/', eventController.getAllEvents);
+router.get('/:id', eventController.getEventById);
+
+module.exports = router;
+
+```
+
+Crie o arquivo `src/routes/participantRoutes.js`.
+
+```bash
+touch src/routes/participantRoutes.js
+```
+
+Conteúdo do arquivo `src/routes/participantRoutes.js`:
+
+```js
+const express = require('express');
+const participantController = require('../controllers/participantController');
+const authMiddleware = require('../middleware/authMiddleware');
+
+const router = express.Router();
+
+router.post('/', authMiddleware, participantController.createParticipant);
+router.post('/:id/register', authMiddleware, participantController.registerParticipant);
+router.post('/:id/unregister', authMiddleware, participantController.unregisterParticipant);
+router.get('/event/:eventId', participantController.getParticipantsByEvent);
+router.get('/', participantController.getAllParticipants);
+
+module.exports = router;
+```
+
+## Configurando o Arquivo de Rotas Principal
+
+Modifique o arquivo `src/routes/index.js` conforme o exemplo abaixo:
+
+```js
+// routes/index.js
+const express = require('express');
+const userRoutes = require('./userRoutes');
+const eventRoutes = require('./eventRoutes'); // <<<<<<<
+const participantRoutes = require('./participantRoutes'); // <<<<<<<
+
+const router = express.Router();
+
+router.use('/auth', userRoutes);
+router.use('/events', eventRoutes); // <<<<<<<
+router.use('/participants', participantRoutes); // <<<<<<<
+
+module.exports = router;

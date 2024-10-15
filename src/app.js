@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 
 const routes = require('./routes');
-const { notFound, errorHandler } = require('./utils/errorHandler');
+const { notFoundHandler, errorHandler } = require('./utils/errors');
 
 const app = express();
 
@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // Para que possa receber da
 // Rotas
 app.use('/api', routes);
 
-// Error handling
-app.use(notFound);
+// Error handling. Fica no final do arquivo porque é o último middleware a ser executado e é responsável por tratar os erros
 app.use(errorHandler);
+app.use(notFoundHandler);
 
 module.exports = app;
