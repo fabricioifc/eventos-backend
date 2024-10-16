@@ -46,6 +46,15 @@ app.delete('/cats/:id', (req, res) => {
     res.json(cats);
 });
 
+// ... código anterior
+
+// curl -X GET http://localhost:5000/catsss
+app.use((req, res) => {
+    res.status(404).json({ message: 'Not found' });
+});
+
 app.listen(5000, () => {
     console.log('Server is running on http://localhost:5000');
 });
+
+
