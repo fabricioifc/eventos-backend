@@ -1,6 +1,6 @@
 const express = require('express');
 const eventController = require('../controllers/eventController');
-const authMiddleware = require('../middleware/authMiddleware');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ const eventValidation = {
     }
 }
 
-router.post('/', authMiddleware, validate(eventValidation.createEvent), eventController.createEvent);
+router.post('/', auth, validate(eventValidation.createEvent), eventController.createEvent);
 router.get('/', eventController.getAllEvents);
 router.get('/:id', eventController.getEventById);
 

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const authMiddleware = (req, res, next) => {
+const auth = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
         return res.status(401).json({ message: 'Token not found', status: 401 });
@@ -19,11 +19,11 @@ const authMiddleware = (req, res, next) => {
         next();
     } catch (error) {
         // Trata erros específicos relacionados ao token JWT
-        if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({ message: 'Token has expired' });
+        if (error.name === jwt.TokenExpiredError.name) {
+            return res.status(401).json({ message: 'Token expirou', status: 401 });
         }
-        if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({ message: 'Invalid token' });
+        if (error.name === jwt.JsonWebTokenError.name) {
+            return res.status(401).json({ message: 'Token inválido', status: 401 });
         }
 
         // Tratamento para outros erros inesperados
@@ -31,4 +31,4 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
-module.exports = authMiddleware;
+module.exports = auth;

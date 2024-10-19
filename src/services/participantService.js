@@ -1,5 +1,6 @@
 const participantRepository = require('../repositories/participantRepository');
 const enviarEmail = require('./emailService');
+const { CustomError } = require('../utils/errors');
 
 class ParticipantService {
 
@@ -9,7 +10,7 @@ class ParticipantService {
 
     async registerParticipant(userId, eventId) {
         if (!userId || !eventId) {
-            throw new Error('User ID and Event ID are required');
+            throw new CustomError('User ID and Event ID are required', 400);
         }
 
         // Check if the user is already registered for the event
