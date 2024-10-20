@@ -1714,3 +1714,12 @@ router.use('/events', eventRoutes); // <<<<<<<
 router.use('/participants', participantRoutes); // <<<<<<<
 
 module.exports = router;
+```
+
+## Testando a Aplicação
+
+Para testar a aplicação, execute o comando:
+
+```bash
+npm run dev
+```
