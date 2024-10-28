@@ -11,6 +11,89 @@ Esta aplicação web foi criada com o objetivo didático de ensinar a criar uma 
 - Insomnia ou Postman
 - Git
 
+## Padrão de Projeto MVC com Sercices e Repositories
+
+O padrão de projeto MVC (Model-View-Controller) é um padrão de arquitetura de software que separa a aplicação em três componentes principais: Model, View e Controller. O MVC é amplamente utilizado em aplicações web para separar a lógica de negócio da interface do usuário.
+
+- **Model**: Representa a camada de dados da aplicação. É responsável por acessar o banco de dados, realizar operações CRUD (Create, Read, Update, Delete) e representar os dados da aplicação.
+- **View**: Representa a camada de apresentação da aplicação. É responsável por exibir os dados da aplicação ao usuário e receber entradas do usuário.
+- **Controller**: Representa a camada de controle da aplicação. É responsável por receber as requisições HTTP, chamar os serviços apropriados e retornar uma resposta.
+- **Services**: Representa a camada de serviços da aplicação. É responsável por conter a lógica de negócio da aplicação, como validação de dados, envio de e-mails, integração com APIs externas, etc.
+- **Repositories**: Representa a camada de repositórios da aplicação. É responsável por abstrair o acesso ao banco de dados e fornecer métodos para operações CRUD.
+
+## Estrutura do Projeto
+
+```
+├── src
+|   ├── app.js
+│   ├── config
+│   │   └── config.json
+|   |   └── database.js
+│   ├── controllers
+│   │   └── todoController.js
+│   ├── middlewares
+│   │   └── auth.js
+│   ├── models
+│   │   └── todo.js
+│   ├── repositories
+│   │   └── todoRepository.js
+│   ├── routes
+│   │   ├── index.js
+│   │   └── todoRoutes.js
+│   ├── services
+│   │   └── todoService.js
+│   ├── utils
+│   │   └── errors.js
+│   └── validations
+├── .sequelizerc
+├── .env
+├── .gitignore
+├── package.json
+├── server.js
+└── README.md
+```
+
+## Armazenamento e Gerenciamento do Estado
+
+Duas abordagems são comuns para armazenar e gerenciar o estado do usuário em aplicações web: Sessões e JWT (JSON Web Tokens).
+
+### Sessões (express-session):
+
+ - O estado do usuário é mantido no servidor e geralmente armazenado em memória ou em uma base de dados, como Redis ou MongoDB.
+ - Um cookie com o ID da sessão é enviado ao cliente, permitindo que o servidor recupere as informações da sessão correspondente a cada solicitação.
+ - A sessão é armazenada e gerenciada pelo próprio servidor, o que facilita o controle de acesso e permite invalidar a sessão diretamente.
+ - Quando a sessão expira, o usuário precisa se autenticar novamente, e o servidor pode facilmente invalidar a sessão.
+ - Sessões são mais adequadas quando você precisa de maior controle sobre o estado do usuário no servidor, como em aplicações web tradicionais.
+
+### JWT (jsonwebtoken):
+
+ - O estado do usuário é mantido no token JWT, que é assinado e enviado ao cliente.
+ - O token JWT é armazenado no lado do cliente (tipicamente em um cookie seguro ou no localStorage).
+ - Cada solicitação carrega o token, que é verificado e decodificado pelo servidor para extrair as informações necessárias.
+ - O servidor não precisa manter o estado do usuário, o que facilita a escalabilidade e a manutenção.
+ - Para renovar o JWT, geralmente se usa um "refresh token", que é um segundo token de longa duração e usado para gerar novos tokens de acesso.
+ - JWT é mais adequado para aplicações RESTful que precisam ser escaláveis, como APIs e sistemas distribuídos, especialmente quando se espera que o cliente gerencie o próprio token e suporte múltiplas instâncias de servidor.
+
+## Autenticação e Autorização
+
+A autenticação é o processo de verificar a identidade do usuário, enquanto a autorização é o processo de verificar se o usuário tem permissão para acessar um recurso específico. O protocolo HTTP define vários métodos de autenticação, tais como:
+
+- **Basic**: O cliente envia o nome de usuário e senha codificados em Base64 no cabeçalho `Authorization`. Usado para autenticação básica.
+- **Bearer**: O cliente envia um token JWT no cabeçalho `Authorization. Usado para autenticação de token.
+- **OAuth**: O cliente envia um token de acesso no cabeçalho `Authorization`. Usado para autenticação de terceiros.
+
+### Autenticação:
+
+ - A autenticação é o processo de verificar a identidade do usuário.
+ - Geralmente, a autenticação é feita por meio de um nome de usuário e senha, token JWT, ou outro método de autenticação.
+ - A autenticação é necessária para acessar recursos protegidos e garantir que apenas usuários autenticados possam acessar esses recursos.
+
+### Autorização:
+    
+ - A autorização é o processo de verificar se o usuário tem permissão para acessar um recurso específico.
+ - A autorização é baseada nas permissões do usuário e nos papéis que ele desempenha.
+ - A autorização é necessária para garantir que os usuários tenham acesso apenas aos recursos para os quais têm permissão.
+
 ## Instruções para Criação do Projeto
 
 1. Criar o diretório do projeto
@@ -34,7 +117,7 @@ Esta aplicação web foi criada com o objetivo didático de ensinar a criar uma 
 
 ```env
 PORT=5000
-DB_NAME=event_db.sqlite
+DB_NAME=db.sqlite
 DB_DIALECT=sqlite
 JWT_SECRET=your_jwt_secret
 EMAIL_USER=seu_email@gmail.com
