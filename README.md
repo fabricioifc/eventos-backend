@@ -1,4 +1,5 @@
 # Aplicação Web para Eventos
+<!-- https://gist.github.com/fabricioifc/aecae4173f4b78ddaba8a24941f9fee3 -->
 
 Esta aplicação web foi criada com o objetivo didático de ensinar a criar uma aplicação web com Node.js, Express e SQLite.
 
@@ -20,6 +21,10 @@ O padrão de projeto MVC (Model-View-Controller) é um padrão de arquitetura de
 - **Controller**: Representa a camada de controle da aplicação. É responsável por receber as requisições HTTP, chamar os serviços apropriados e retornar uma resposta.
 - **Services**: Representa a camada de serviços da aplicação. É responsável por conter a lógica de negócio da aplicação, como validação de dados, envio de e-mails, integração com APIs externas, etc.
 - **Repositories**: Representa a camada de repositórios da aplicação. É responsável por abstrair o acesso ao banco de dados e fornecer métodos para operações CRUD.
+
+A imagem a seguir ilustra a arquitetura MVC com Services e Repositories:
+
+![MVC with Services and Repositories](https://miro.medium.com/v2/resize:fit:640/0*KikwdypTj1FVSpB2.png)
 
 ## Estrutura do Projeto
 
