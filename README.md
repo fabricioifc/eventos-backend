@@ -16,7 +16,7 @@ Esta aplicação web foi criada com o objetivo didático de ensinar a criar uma 
 1. Criar o diretório do projeto
 2. Inicializar o projeto`npm init -y`
 4. Instalar o Express com `npm install express`
-5. Instalar as outras dependências: `npm install sqlite3 bcryptjs bcryptjs body-parser cors jsonwebtoken dotenv express-validation helmet morgan nodemailer sequelize`
+5. Instalar as outras dependências: `npm install sqlite3 bcryptjs body-parser cors jsonwebtoken dotenv express-validation helmet morgan nodemailer sequelize`
 6. Instalar o Nodemon como dependência de desenvolvimento: `npm install nodemon -D`
 7. Adicionar os scripts no `package.json`:
 ```json
@@ -156,13 +156,49 @@ module.exports = {
 };
 ```
 
+- `src/migrations/xxxx-create-todo.js`:
+```js
+'use strict';
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('Todos', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      description: {
+        type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.BOOLEAN
+      }
+    }, {
+      timestamps: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
+      tableName: 'Todos'
+    });
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('Todos');
+  }
+};
+```
+
 Com as migrations prontas, execute o comando a seguir para criar as tabelas no banco de dados:
 
 ```bash
 npx sequelize-cli db:migrate
 ```
 
-Com isso, as tabelas `Users`, `Events` e `Participants` serão criadas no banco de dados e também os arquivos `src/models/user.js`, `src/models/event.js` e `src/models/participant.js`. Essas classes são os modelos que representam as tabelas no banco de dados e podem ser modificadas conforme a necessidade do projeto.
+Com isso, as tabelas `Users` e `todos` serão criadas no banco de dados e também os arquivos `src/models/user.js` e `src/models/todo.js`. Essas classes são os modelos que representam as tabelas no banco de dados e podem ser modificadas conforme a necessidade do projeto.
 
 > **Observação:** Perceba que foi criado um arquivo `dev.sqlite3` na raiz do projeto. Esse arquivo é o banco de dados SQLite que será utilizado para armazenar os dados da aplicação.
 
